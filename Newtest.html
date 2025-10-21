@@ -39,25 +39,24 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData); // Convert to plain object
 
-            fetch(this.action, {
-                method: 'POST',
-                body: new URLSearchParams(data), // Ensures URL-encoded format
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    showStatus('Thank you! Your message has been saved to SharePoint.', 'success');
-                    this.reset(); // Clear form
-                } else {
-                    throw new Error('Submission failed');
-                }
-            })
-            .catch(error => {
-                showStatus('Error: ' + error.message + '. Please try again.', 'error');
-            });
-        });
+          fetch(this.action, {
+    method: 'POST',
+    body: JSON.stringify(data),  // Changed: Serialize to JSON
+    headers: {
+        'Content-Type': 'application/json'  // Changed: Set JSON content type
+    }
+})
+.then(response => {
+    if (response.ok) {
+        showStatus('Thank you! Your message has been saved to SharePoint.', 'success');
+        this.reset(); // Clear form
+    } else {
+        throw new Error('Submission failed: ' + response.statusText);
+    }
+})
+.catch(error => {
+    showStatus('Error: ' + error.message + '. Please try again.', 'error');
+});
 
         function showStatus(message, type) {
             const statusDiv = document.getElementById('status');
@@ -70,3 +69,4 @@
 </body>
 
 </html>
+
